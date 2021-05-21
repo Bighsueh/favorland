@@ -5,14 +5,70 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".MainActivity">
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Hello World!"
+        tools:context=".MainActivity"
+        >
+
+    <ImageView
+            android:layout_width="348dp"
+            android:layout_height="209dp"
+            app:srcCompat="@drawable/login"
+            android:id="@+id/imageView"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    <EditText
+            android:layout_width="133dp"
+            android:layout_height="36dp"
+            android:inputType="textPersonName"
+            android:text=""
+            android:ems="10"
+            android:id="@+id/ed_acc"
+            app:layout_constraintTop_toTopOf="@+id/imageView"
+            app:layout_constraintStart_toStartOf="@+id/imageView"
+            app:layout_constraintEnd_toEndOf="@+id/imageView"
+            android:layout_marginTop="56dp"
+            app:layout_constraintHorizontal_bias="0.651"
+            android:background="#00000000"/>
+
+    <EditText
+            android:layout_width="133dp"
+            android:layout_height="36dp"
+            android:inputType="textPersonName"
+            android:text=""
+            android:ems="10"
+            android:id="@+id/ed_psd"
+            app:layout_constraintStart_toStartOf="@+id/ed_acc"
+            app:layout_constraintEnd_toEndOf="@+id/ed_acc"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintTop_toBottomOf="@+id/ed_acc"
+            android:layout_marginTop="8dp"
+            android:background="#00000000"/>
+
+    <Button
+            android:text=""
+            android:layout_width="48dp"
+            android:layout_height="27dp"
+            android:id="@+id/btn_login"
+            app:layout_constraintTop_toTopOf="@+id/imageView"
+            app:layout_constraintStart_toStartOf="@+id/imageView"
+            app:layout_constraintEnd_toEndOf="@+id/imageView"
+            android:layout_marginTop="156dp"
+            app:layout_constraintHorizontal_bias="0.24"
+            android:background="#00000000"/>
+
+    <Button
+            android:text=""
+            android:layout_width="47dp"
+            android:layout_height="25dp"
+            android:id="@+id/btn_finish"
+            app:layout_constraintTop_toTopOf="@+id/btn_login"
+            app:layout_constraintStart_toStartOf="@+id/imageView"
+            app:layout_constraintEnd_toEndOf="@+id/imageView"
+            app:layout_constraintHorizontal_bias="0.774"
+            android:background="#00000000"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_login"
+            app:layout_constraintVertical_bias="0.0"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
