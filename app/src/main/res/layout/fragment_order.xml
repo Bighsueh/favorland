@@ -7,14 +7,120 @@
         android:layout_height="match_parent" tools:context=".OrderFragment"
         android:background="#FFFFFF">
 
-    <TextView
-            android:text="點餐畫面"
-            android:textSize="50dp"
-            android:layout_width="272dp"
-            android:layout_height="91dp"
-            android:id="@+id/textView3"
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintBottom_toBottomOf="parent">
+
+        <LinearLayout
+                android:layout_width="175dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:background="#f2f2f2">
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:textSize="16dp"
+                        android:text="桌號："
+                        android:textColor="#000000"
+                        android:gravity="center"/>
+
+                <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:textSize="16dp"
+                        android:gravity="center"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:textSize="16dp"
+                        android:text="人數："
+                        android:textColor="#000000"
+                        android:gravity="center"/>
+
+                <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:textSize="16dp"
+                        android:gravity="center"/>
+
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rcv_order"
+                    />
+            <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:text="折底："
+                    android:textColor="#000000"
+                    android:gravity=""
+                    android:textSize="16dp"
+                    android:background="#00000000"/>
+
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:text="小計："
+                    android:textColor="#000000"
+                    android:textSize="16dp"
+                    android:background="#00000000"
+                    android:gravity=""/>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+            <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:orientation="horizontal"
+                    android:id="@+id/rcv_item"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    >
+
+            </androidx.recyclerview.widget.RecyclerView>
+
+            <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rcv_dishes"
+                    >
+
+            </androidx.recyclerview.widget.RecyclerView>
+
+            <Button
+                    android:layout_width="115dp"
+                    android:layout_height="60dp"
+                    android:text="結帳"
+                    android:id="@+id/btn_insert"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

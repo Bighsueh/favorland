@@ -3,10 +3,13 @@ package tw.edu.nfu.hsueh.favorland
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.drawerlayout.widget.DrawerLayout
+import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main_view.*
+import kotlinx.android.synthetic.main.nav_header.*
 
 class MainView : AppCompatActivity() {
 
@@ -21,7 +24,14 @@ class MainView : AppCompatActivity() {
         toggle.syncState()
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
+        intent?.extras?.let {
+            val data = it.getString("UserName")
+            Toast.makeText(applicationContext,data,Toast.LENGTH_SHORT).show()
+            val nav = findViewById<NavigationView>(R.id.nav_view)
+            val headerView = nav.getHeaderView(0)
+            val navUserName = headerView.findViewById<TextView>(R.id.user_name)
+            navUserName.setText(data)
+        }
         nav_view.setNavigationItemSelectedListener {
 
             when(it.itemId){
