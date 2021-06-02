@@ -1,5 +1,6 @@
 package tw.edu.nfu.hsueh.favorland
 
+import android.database.sqlite.SQLiteDatabase
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
@@ -7,6 +8,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main_view.*
 import kotlinx.android.synthetic.main.nav_header.*
@@ -15,13 +18,26 @@ class MainView : AppCompatActivity() {
 
     lateinit var toggle:ActionBarDrawerToggle
 
+    private lateinit var itemAdapter: ItemAdapter
+    private val itemContacts = ArrayList<ItemModel>()
+    private lateinit var db: SQLiteDatabase
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_view)
 
+
+        db = MySQLiteHelper(this).readableDatabase
+        val query = db.rawQuery("SELECT * FROM items",null)
+        query.moveToFirst()
+
+
         toggle = ActionBarDrawerToggle(this,drawerLayout,R.string.open,R.string.close)
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
+
+
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         intent?.extras?.let {
@@ -60,4 +76,5 @@ class MainView : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
+
 }
