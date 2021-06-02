@@ -16,8 +16,8 @@ class ItemAdapter(private val data:ArrayList<ItemModel>):RecyclerView.Adapter<It
         val btn_item = v.findViewById<Button>(R.id.btn_item)
 
     }
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val v = LayoutInflater.from(parent.context).inflate(R.layout.list_item,parent,false)
+    override fun onCreateViewHolder(ViewGroup: ViewGroup, position: Int): ViewHolder {
+        val v = LayoutInflater.from(ViewGroup.context).inflate(R.layout.list_item,ViewGroup,false)
         return ViewHolder(v)
     }
 

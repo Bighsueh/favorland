@@ -30,7 +30,7 @@ class MySQLiteHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,nu
         db?.execSQL(itemInsersql, arrayOf("甜點"))
         db?.execSQL(itemInsersql, arrayOf("飲品"))
 
-        db?.execSQL("CREATE TABLE dishes(id INTEGER PRIMARY KEY AUTOINCREMENT,dish TEXT,price INTEGER,item INTEGER)")
+        db?.execSQL("CREATE TABLE dishes(id INTEGER PRIMARY KEY AUTOINCREMENT,dish TEXT,price INTEGER,itemid INTEGER)")
         val dishesInsertsql = "INSERT into dishes(dish, price, itemid) VALUES(?,?,?)"
         db?.execSQL(dishesInsertsql, arrayOf("塔塔醬",30,1))
         db?.execSQL(dishesInsertsql, arrayOf("沙拉醬",30,1))
