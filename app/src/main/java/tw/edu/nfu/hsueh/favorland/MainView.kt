@@ -29,7 +29,7 @@ class MainView : AppCompatActivity() {
         //select
         val query = db.rawQuery("SELECT * FROM items",null)
         // 宣告recyclerView
-        val recycler = findViewById<RecyclerView>(R.id.recycler)
+        val recycler = findViewById<RecyclerView>(R.id.rcv_item)
         // 透過grid的方式排版 當超過6欄會換行
         val gridLayoutManager = GridLayoutManager(this,6)
         //adapter綁定資料來源
