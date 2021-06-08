@@ -23,11 +23,19 @@ class OrderAdapter(private val data:ArrayList<OrderModel>):RecyclerView.Adapter<
         holder.tv_orderName.text = data[position].dish
         holder.tv_count.text = data[position].count.toString()
         holder.imgView_minus.setOnClickListener {
-            holder.tv_count.text = (data[position].count -1).toString()
+            if (holder.tv_count.text != "1" ){
+                data[position].count -= 1
+            }
+           else{
+               data.removeAt(position)
+           }
+            notifyDataSetChanged()
         }
         holder.imgView_add.setOnClickListener {
-            holder.tv_count.text = (data[position].count +1).toString()
+            data[position].count += 1
+            notifyDataSetChanged()
         }
+
     }
 
     override fun getItemCount(): Int = data.size
