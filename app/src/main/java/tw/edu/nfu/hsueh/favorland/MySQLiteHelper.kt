@@ -51,8 +51,11 @@ class MySQLiteHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,nu
         db?.execSQL(dishesInsertsql, arrayOf("奶茶",30,6))
         db?.execSQL(dishesInsertsql, arrayOf("果醋氣泡飲",30,6))
 
+//       task 桌號 total 小記 discount 折抵
+        db?.execSQL("CREATE TABLE records(id INTEGER PRIMARY KEY AUTOINCREMENT,total INTEGER,userid INTEGER,date TEXT,orderquantity INTEGER)")
 
-
+//      record 再加入時抓records生成的id 也就是這筆結帳records的id對多樣菜品到這裡 ；item 蔡名(看你要用TEXT還是INTEGER) ；quantity 數量
+        db?.execSQL("CREATE TABLE recorddetails(id INTEGER PRIMARY KEY AUTOINCREMENT,record INTEGER,item TEXT,quantity INTEGER)")
 
 
 

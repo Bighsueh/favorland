@@ -23,6 +23,7 @@ class MainActivity : AppCompatActivity() {
                 val intent = Intent(this,MainView::class.java)
 //                Toast.makeText(this, "使用者:${query.getString(1)}", Toast.LENGTH_SHORT).show()
                 intent.putExtra("UserName","${query.getString(1)}")
+                intent.putExtra("UserId",query.getInt(0))
                 startActivity(intent)
                 db.close()
 

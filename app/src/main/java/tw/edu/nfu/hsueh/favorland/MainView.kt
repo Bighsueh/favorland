@@ -13,7 +13,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main_view.*
+import kotlinx.android.synthetic.main.fragment_order.*
 import kotlinx.android.synthetic.main.nav_header.*
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 class MainView : AppCompatActivity() {
 
@@ -25,17 +29,33 @@ class MainView : AppCompatActivity() {
     private val menuList = ArrayList<MenuList>()
     private val order = ArrayList<OrderModel>()
     private lateinit var db: SQLiteDatabase
+    private lateinit var userName:String
+    private var total:Int = 0
+    private var userId:Int = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_view)
         //database 能讀寫
+
+
+        intent?.extras?.let {
+            userName = it.getString("UserName").toString()
+            userId = it.getInt("UserId")
+//            Toast.makeText(applicationContext,userName,Toast.LENGTH_SHORT).show()
+            val nav = findViewById<NavigationView>(R.id.nav_view)
+           val headerView = nav.getHeaderView(0)
+            val navUserName = headerView.findViewById<TextView>(R.id.user_name)
+            navUserName.setText(userName)
+        }
+
+
         db = MySQLiteHelper(this).readableDatabase
         //select
         val query = db.rawQuery("SELECT * FROM items",null)
         // 宣告recyclerView
         val recycler = findViewById<RecyclerView>(R.id.rcv_item)
         // 透過grid的方式排版 當超過6欄會換行
-        val gridLayoutManager = GridLayoutManager(this,6)
+        val gridLayoutManager = LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false)
         //adapter綁定資料來源
         itemAdapter = ItemAdapter(itemContacts)
         // recycler 綁定 gridLayout
@@ -62,7 +82,7 @@ class MainView : AppCompatActivity() {
             }
         }
         val recyclerMenu = findViewById<RecyclerView>(R.id.rcv_dishes)
-        val menuGridLayoutManager = GridLayoutManager(this,3)
+        val menuGridLayoutManager = GridLayoutManager(this,4)
         menuListAdapter = MenuListAdapter(menuList)
         recyclerMenu.layoutManager = menuGridLayoutManager
         recyclerMenu.adapter = menuListAdapter
@@ -70,6 +90,7 @@ class MainView : AppCompatActivity() {
         menuListAdapter?.setOnClickItem {
             order.add(OrderModel(it.dish,it.price,1))
             orderAdapter.notifyDataSetChanged()
+            calculationTotal()
         }
         val recyclerOrder = findViewById<RecyclerView>(R.id.rcv_order)
         orderAdapter = OrderAdapter(order)
@@ -77,8 +98,20 @@ class MainView : AppCompatActivity() {
         recyclerOrder.adapter = orderAdapter
         recyclerOrder.layoutManager = orderLinearLayout
 
+        orderAdapter?.setOnClickItem {
+            calculationTotal()
+        }
 
 
+        btn_insert.setOnClickListener {
+
+            val sdf = SimpleDateFormat("yyyy/dd/M hh:mm")
+            val currentDate = sdf.format(Date())
+
+            val recordInsertsql = "INSERT INTO records(date, orderquantity, total, userid) VALUES(?,?,?,?)"
+            db.execSQL(recordInsertsql, arrayOf(currentDate,order.count(),123,userId))
+
+        }
 
 
 
@@ -90,14 +123,7 @@ class MainView : AppCompatActivity() {
 
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        intent?.extras?.let {
-            val data = it.getString("UserName")
-            Toast.makeText(applicationContext,data,Toast.LENGTH_SHORT).show()
-            val nav = findViewById<NavigationView>(R.id.nav_view)
-            val headerView = nav.getHeaderView(0)
-            val navUserName = headerView.findViewById<TextView>(R.id.user_name)
-            navUserName.setText(data)
-        }
+
         nav_view.setNavigationItemSelectedListener {
 
             when(it.itemId){
@@ -118,6 +144,14 @@ class MainView : AppCompatActivity() {
             }
             true
         }
+    }
+    fun calculationTotal() {
+        total = 0
+        for (i in 0 until order.count()){
+            total += (order[i].price * order[i].count)
+        }
+        tv_total.setText(total.toString())
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
