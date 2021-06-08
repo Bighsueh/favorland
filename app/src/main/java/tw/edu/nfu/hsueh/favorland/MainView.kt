@@ -19,7 +19,9 @@ class MainView : AppCompatActivity() {
 
     lateinit var toggle:ActionBarDrawerToggle
     private lateinit var itemAdapter: ItemAdapter
+    private lateinit var menuListAdapter:MenuListAdapter
     private val itemContacts = ArrayList<ItemModel>()
+    private val menuList = ArrayList<MenuList>()
     private lateinit var db: SQLiteDatabase
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +48,22 @@ class MainView : AppCompatActivity() {
             query.moveToNext()
             itemAdapter.notifyDataSetChanged()
         }
+        // recycler點擊事件
+        itemAdapter?.setOnClickItem {
+            menuList.clear()
+            val dish = db.rawQuery("SELECT dish,price,item FROM dishes JOIN items ON dishes.itemid = items.id WHERE item = '${it.name}'",null)
+            dish.moveToFirst()
+            for(i in 0 until dish.count){
+                menuList.add(MenuList(dish.getString(0),dish.getInt(1),dish.getString(2)))
+                dish.moveToNext()
+                menuListAdapter.notifyDataSetChanged()
+            }
+        }
+        val recylerMenu = findViewById<RecyclerView>(R.id.rcv_dishes)
+        val menuGridLayoutManager = GridLayoutManager(this,3)
+        menuListAdapter = MenuListAdapter(menuList)
+        recylerMenu.layoutManager = menuGridLayoutManager
+        recylerMenu.adapter = menuListAdapter
 
 
 
