@@ -20,8 +20,10 @@ class MainView : AppCompatActivity() {
     lateinit var toggle:ActionBarDrawerToggle
     private lateinit var itemAdapter: ItemAdapter
     private lateinit var menuListAdapter:MenuListAdapter
+    private lateinit var orderAdapter: OrderAdapter
     private val itemContacts = ArrayList<ItemModel>()
     private val menuList = ArrayList<MenuList>()
+    private val order = ArrayList<OrderModel>()
     private lateinit var db: SQLiteDatabase
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,11 +61,21 @@ class MainView : AppCompatActivity() {
                 menuListAdapter.notifyDataSetChanged()
             }
         }
-        val recylerMenu = findViewById<RecyclerView>(R.id.rcv_dishes)
+        val recyclerMenu = findViewById<RecyclerView>(R.id.rcv_dishes)
         val menuGridLayoutManager = GridLayoutManager(this,3)
         menuListAdapter = MenuListAdapter(menuList)
-        recylerMenu.layoutManager = menuGridLayoutManager
-        recylerMenu.adapter = menuListAdapter
+        recyclerMenu.layoutManager = menuGridLayoutManager
+        recyclerMenu.adapter = menuListAdapter
+        // recylerMenu點擊
+        menuListAdapter?.setOnClickItem {
+            order.add(OrderModel(it.dish,it.price,1))
+            orderAdapter.notifyDataSetChanged()
+        }
+        val recyclerOrder = findViewById<RecyclerView>(R.id.rcv_order)
+        orderAdapter = OrderAdapter(order)
+        val orderLinearLayout = LinearLayoutManager(this)
+        recyclerOrder.adapter = orderAdapter
+        recyclerOrder.layoutManager = orderLinearLayout
 
 
 
