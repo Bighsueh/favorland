@@ -40,7 +40,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:textSize="16dp"
-                        android:gravity="center"/>
+                        android:gravity="center"
+                        android:id="@+id/ed_task"/>
 
             </LinearLayout>
 
@@ -61,7 +62,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:textSize="16dp"
-                        android:gravity="center"/>
+                        android:gravity="center"
+                        android:id="@+id/ed_people"/>
 
             </LinearLayout>
 
@@ -88,7 +90,7 @@
                 <EditText
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:text="123"
+                        android:text="1"
                         android:gravity="center"
                         android:id="@+id/ed_discount"
                         android:textSize="16dp"

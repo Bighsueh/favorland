@@ -3,10 +3,13 @@ package tw.edu.nfu.hsueh.favorland
 import android.database.sqlite.SQLiteDatabase
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.MenuItem
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.core.widget.addTextChangedListener
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,12 +28,16 @@ class MainView : AppCompatActivity() {
     private lateinit var itemAdapter: ItemAdapter
     private lateinit var menuListAdapter:MenuListAdapter
     private lateinit var orderAdapter: OrderAdapter
+    private lateinit var recordAdapter: RecordAdapter
     private val itemContacts = ArrayList<ItemModel>()
     private val menuList = ArrayList<MenuList>()
     private val order = ArrayList<OrderModel>()
+    private val record = ArrayList<RecordModel>()
+
     private lateinit var db: SQLiteDatabase
     private lateinit var userName:String
     private var total:Int = 0
+    private var discount:Float = 1.0F
     private var userId:Int = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -88,7 +95,15 @@ class MainView : AppCompatActivity() {
         recyclerMenu.adapter = menuListAdapter
         // recylerMenu點擊
         menuListAdapter?.setOnClickItem {
-            order.add(OrderModel(it.dish,it.price,1))
+            var adddish:String = it.dish
+            var index:Int = -1
+            for (i in 0 until order.count()){
+                if(adddish == order[i].dish){
+                    index = i
+                    order[i].count+=1
+                }
+            }
+            if(index == -1){order.add(OrderModel(it.dish,it.price,1))}
             orderAdapter.notifyDataSetChanged()
             calculationTotal()
         }
@@ -103,15 +118,41 @@ class MainView : AppCompatActivity() {
         }
 
 
-        btn_insert.setOnClickListener {
 
+        btn_insert.setOnClickListener {
+            calculationTotal()
             val sdf = SimpleDateFormat("yyyy/dd/M hh:mm")
             val currentDate = sdf.format(Date())
+            var quantity:Int = 0
+            for(i in 0 until order.count()){
+                quantity+=order[i].count
+            }
 
             val recordInsertsql = "INSERT INTO records(date, orderquantity, total, userid) VALUES(?,?,?,?)"
-            db.execSQL(recordInsertsql, arrayOf(currentDate,order.count(),123,userId))
+            db.execSQL(recordInsertsql, arrayOf(currentDate,quantity,total,userId))
+            clearView()
+
+
 
         }
+
+        ed_discount.addTextChangedListener(object : TextWatcher{
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                TODO("Not yet implemented")
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+                discount = ed_discount.text.toString().toFloat()
+                if (discount>1){
+                    ed_discount.setText("1")
+                }
+            }
+
+        })
 
 
 
@@ -136,6 +177,27 @@ class MainView : AppCompatActivity() {
                     Toast.makeText(applicationContext,"Clicked record",Toast.LENGTH_SHORT).show()
                     val fragment = supportFragmentManager.beginTransaction()
                     fragment.replace(R.id.main_fragment,RecordFragment()).commit()
+
+                    val query = db.rawQuery("SELECT * FROM records",null)
+
+                    val recyclerrecord = findViewById<RecyclerView>(R.id.rcv_record)
+
+                    val recordGLM = LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
+
+                    recordAdapter = RecordAdapter(record)
+
+                    recyclerrecord.layoutManager = recordGLM
+
+                    recyclerrecord.adapter = orderAdapter
+
+                    query.moveToFirst()
+                    record.clear()
+                    for(i in 0 until query.count){
+                        record.add(RecordModel(query.getInt(0),query.getString(1),query.getInt(2),query.getInt(3),query.getInt(4)))
+                        query.moveToNext()
+                        recordAdapter.notifyDataSetChanged()
+                    }
+
                 }
                 R.id.nav_logout -> {
                     Toast.makeText(applicationContext,"Clicked logout",Toast.LENGTH_SHORT).show()
@@ -147,12 +209,24 @@ class MainView : AppCompatActivity() {
     }
     fun calculationTotal() {
         total = 0
+        discount = ed_discount.text.toString().toFloat()
         for (i in 0 until order.count()){
             total += (order[i].price * order[i].count)
         }
+        total = (discount * total).toInt()
         tv_total.setText(total.toString())
 
     }
+    fun clearView(){
+        ed_task.setText("")
+        ed_people.setText("")
+        order.clear()
+
+        total = 0
+        calculationTotal()
+        orderAdapter.notifyDataSetChanged()
+    }
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if(toggle.onOptionsItemSelected(item)){
@@ -160,5 +234,6 @@ class MainView : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
+
 
 }
