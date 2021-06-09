@@ -138,18 +138,16 @@ class MainView : AppCompatActivity() {
 
         ed_discount.addTextChangedListener(object : TextWatcher{
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                TODO("Not yet implemented")
+
             }
 
+
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                TODO("Not yet implemented")
+                calculationTotal()
             }
 
             override fun afterTextChanged(p0: Editable?) {
-                discount = ed_discount.text.toString().toFloat()
-                if (discount>1){
-                    ed_discount.setText("1")
-                }
+
             }
 
         })
@@ -209,7 +207,13 @@ class MainView : AppCompatActivity() {
     }
     fun calculationTotal() {
         total = 0
-        discount = ed_discount.text.toString().toFloat()
+        if(ed_discount.text.toString() !=""){
+            discount = ed_discount.text.toString().toFloat()
+        }
+        if(discount>1.0F){
+            discount = 1.0F
+            ed_discount.setText("1")
+        }
         for (i in 0 until order.count()){
             total += (order[i].price * order[i].count)
         }

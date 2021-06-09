@@ -94,7 +94,8 @@
                         android:gravity="center"
                         android:id="@+id/ed_discount"
                         android:textSize="16dp"
-                        android:background="@null"/>
+                        android:background="@null"
+                        android:inputType="numberDecimal"/>
             </LinearLayout>
 
             <LinearLayout
