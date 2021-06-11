@@ -30,15 +30,14 @@ class RecordAdapter(private val data:ArrayList<RecordModel>):RecyclerView.Adapte
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.tv_id.setText(data[position].id)
-        holder.tv_date.setText(data[position].time)
-        holder.tv_quantity.setText(data[position].quantity)
-        holder.tv_total.setText(data[position].total)
-        holder.tv_member.setText(data[position].memberid)
+        holder.tv_id.setText(data[position].id.toString())
+        holder.tv_date.setText(data[position].time.toString())
+        holder.tv_quantity.setText(data[position].quantity.toString())
+        holder.tv_total.setText(data[position].total.toString())
+        holder.tv_member.setText(data[position].memberid.toString())
         }
 
     override fun getItemCount(): Int {
-        TODO("Not yet implemented")
         return data.size
     }
 }

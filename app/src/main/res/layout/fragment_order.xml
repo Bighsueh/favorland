@@ -81,7 +81,7 @@
                 <TextView
                         android:layout_width="50dp"
                         android:layout_height="40dp"
-                        android:text="折底："
+                        android:text="折抵："
                         android:textColor="#000000"
                         android:gravity=""
                         android:textSize="16dp"

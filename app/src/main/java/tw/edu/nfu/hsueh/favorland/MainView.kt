@@ -1,5 +1,6 @@
 package tw.edu.nfu.hsueh.favorland
 
+import android.content.Intent
 import android.database.sqlite.SQLiteDatabase
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -25,14 +26,17 @@ import kotlin.collections.ArrayList
 class MainView : AppCompatActivity() {
 
     lateinit var toggle:ActionBarDrawerToggle
+
     private lateinit var itemAdapter: ItemAdapter
     private lateinit var menuListAdapter:MenuListAdapter
-    private lateinit var orderAdapter: OrderAdapter
-    private lateinit var recordAdapter: RecordAdapter
+    private lateinit var orderAdapter:OrderAdapter
+
     private val itemContacts = ArrayList<ItemModel>()
     private val menuList = ArrayList<MenuList>()
     private val order = ArrayList<OrderModel>()
-    private val record = ArrayList<RecordModel>()
+
+//    private lateinit var recordAdapter:RecordAdapter
+//    private val record = ArrayList<RecordModel>()
 
     private lateinit var db: SQLiteDatabase
     private lateinit var userName:String
@@ -44,20 +48,185 @@ class MainView : AppCompatActivity() {
         setContentView(R.layout.activity_main_view)
         //database 能讀寫
 
-
         intent?.extras?.let {
             userName = it.getString("UserName").toString()
             userId = it.getInt("UserId")
-//            Toast.makeText(applicationContext,userName,Toast.LENGTH_SHORT).show()
             val nav = findViewById<NavigationView>(R.id.nav_view)
-           val headerView = nav.getHeaderView(0)
+            val headerView = nav.getHeaderView(0)
             val navUserName = headerView.findViewById<TextView>(R.id.user_name)
             navUserName.setText(userName)
         }
+//        Toast.makeText(applicationContext,userName,Toast.LENGTH_SHORT).show()
+
+
+
+//        val fragmentOrder = OrderFragment()
+//        fragmentOrder.arguments?.putString("UserName","${userName}")
+//        fragmentOrder.arguments?.putInt("UserId",userId)
+
+
 
 
         db = MySQLiteHelper(this).readableDatabase
         //select
+
+//        itemView()
+
+//        val recyclerMenu = findViewById<RecyclerView>(R.id.rcv_dishes)
+//        val menuGridLayoutManager = GridLayoutManager(this,4)
+//        menuListAdapter = MenuListAdapter(menuList)
+//        recyclerMenu.layoutManager = menuGridLayoutManager
+//        recyclerMenu.adapter = menuListAdapter
+        // recylerMenu點擊
+//        menuListAdapter?.setOnClickItem {
+//            var adddish:String = it.dish
+//            var index:Int = -1
+//            for (i in 0 until order.count()){
+//                if(adddish == order[i].dish){
+//                    index = i
+//                    order[i].count+=1
+//                }
+//            }
+//            if(index == -1){order.add(OrderModel(it.dish,it.price,1))}
+//            orderAdapter.notifyDataSetChanged()
+//            calculationTotal()
+//        }
+//        val recyclerOrder = findViewById<RecyclerView>(R.id.rcv_order)
+//        orderAdapter = OrderAdapter(order)
+//        val orderLinearLayout = LinearLayoutManager(this)
+//        recyclerOrder.adapter = orderAdapter
+//        recyclerOrder.layoutManager = orderLinearLayout
+//
+//        orderAdapter?.setOnClickItem {
+//            calculationTotal()
+//        }
+
+
+
+//        btn_insert.setOnClickListener {
+//            calculationTotal()
+//            val sdf = SimpleDateFormat("yyyy/dd/M hh:mm")
+//            val currentDate = sdf.format(Date())
+//            var quantity:Int = 0
+//            for(i in 0 until order.count()){
+//                quantity+=order[i].count
+//            }
+//
+//            val recordInsertsql = "INSERT INTO records(date, orderquantity, total, userid) VALUES(?,?,?,?)"
+//            db.execSQL(recordInsertsql, arrayOf(currentDate,quantity,total,userId))
+//            clearView()
+//        }
+
+//        ed_discount.addTextChangedListener(object : TextWatcher{
+//            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+//
+//            }
+//
+//
+//            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+//                calculationTotal()
+//            }
+//
+//            override fun afterTextChanged(p0: Editable?) {
+//
+//            }
+//
+//        })
+
+        val bundle = Bundle()
+        bundle.putString("UserName","${userName}")
+        bundle.putInt("UserId",userId)
+        val fragmentOrder = OrderFragment()
+        fragmentOrder.arguments = bundle
+        val fragment = supportFragmentManager.beginTransaction()
+        fragment.replace(R.id.main_fragment,fragmentOrder).commit()
+
+
+        toggle = ActionBarDrawerToggle(this,drawerLayout,R.string.open,R.string.close)
+        drawerLayout.addDrawerListener(toggle)
+        toggle.syncState()
+
+
+
+
+
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        nav_view.setNavigationItemSelectedListener {
+            when(it.itemId){
+                R.id.nav_order -> {
+//                    Toast.makeText(applicationContext,"Clicked order",Toast.LENGTH_SHORT).show()
+                    val fragment = supportFragmentManager.beginTransaction()
+                    fragment.replace(R.id.main_fragment,fragmentOrder).commit()
+
+                }
+                R.id.nav_record -> {
+//                    Toast.makeText(applicationContext,"Clicked record",Toast.LENGTH_SHORT).show()
+                    val fragment = supportFragmentManager.beginTransaction()
+
+                    fragment.replace(R.id.main_fragment,RecordFragment()).commit()
+
+
+                }
+                R.id.nav_logout -> {
+//                    Toast.makeText(applicationContext,"Clicked logout",Toast.LENGTH_SHORT).show()
+                    finish()
+                }
+            }
+
+            true
+        }
+    }
+    fun calculationTotal() {
+        total = 0
+        if(ed_discount.text.toString() !=""){
+            discount = ed_discount.text.toString().toFloat()
+        }
+        if(discount>1.0F){
+            discount = 1.0F
+            ed_discount.setText("1")
+        }
+        for (i in 0 until order.count()){
+            total += (order[i].price * order[i].count)
+        }
+        total = (discount * total).toInt()
+        tv_total.setText(total.toString())
+
+    }
+//    fun clearView(){
+//        ed_task.setText("")
+//        ed_people.setText("")
+//        order.clear()
+//
+//        total = 0
+//        calculationTotal()
+//        orderAdapter.notifyDataSetChanged()
+//    }
+//    fun recordView(){
+//        val queryy = db.rawQuery("SELECT * FROM records",null)
+//
+//        val recyclerrecord = findViewById<RecyclerView>(R.id.rcv_record)
+//
+//        val recordGLM = LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
+//
+//        recordAdapter = RecordAdapter(record)
+//
+//        recyclerrecord.layoutManager = recordGLM
+//
+//        recyclerrecord.adapter = orderAdapter
+//
+//        queryy.moveToFirst()
+//        record.clear()
+//        for(i in 0 until queryy.count){
+//            record.add(RecordModel(queryy.getInt(0),queryy.getString(1),queryy.getInt(2),queryy.getInt(3),queryy.getInt(4)))
+//            queryy.moveToNext()
+//            recordAdapter.notifyDataSetChanged()
+//        }
+//
+//
+//    }
+    fun itemView(){
         val query = db.rawQuery("SELECT * FROM items",null)
         // 宣告recyclerView
         val recycler = findViewById<RecyclerView>(R.id.rcv_item)
@@ -88,147 +257,6 @@ class MainView : AppCompatActivity() {
                 menuListAdapter.notifyDataSetChanged()
             }
         }
-        val recyclerMenu = findViewById<RecyclerView>(R.id.rcv_dishes)
-        val menuGridLayoutManager = GridLayoutManager(this,4)
-        menuListAdapter = MenuListAdapter(menuList)
-        recyclerMenu.layoutManager = menuGridLayoutManager
-        recyclerMenu.adapter = menuListAdapter
-        // recylerMenu點擊
-        menuListAdapter?.setOnClickItem {
-            var adddish:String = it.dish
-            var index:Int = -1
-            for (i in 0 until order.count()){
-                if(adddish == order[i].dish){
-                    index = i
-                    order[i].count+=1
-                }
-            }
-            if(index == -1){order.add(OrderModel(it.dish,it.price,1))}
-            orderAdapter.notifyDataSetChanged()
-            calculationTotal()
-        }
-        val recyclerOrder = findViewById<RecyclerView>(R.id.rcv_order)
-        orderAdapter = OrderAdapter(order)
-        val orderLinearLayout = LinearLayoutManager(this)
-        recyclerOrder.adapter = orderAdapter
-        recyclerOrder.layoutManager = orderLinearLayout
-
-        orderAdapter?.setOnClickItem {
-            calculationTotal()
-        }
-
-
-
-        btn_insert.setOnClickListener {
-            calculationTotal()
-            val sdf = SimpleDateFormat("yyyy/dd/M hh:mm")
-            val currentDate = sdf.format(Date())
-            var quantity:Int = 0
-            for(i in 0 until order.count()){
-                quantity+=order[i].count
-            }
-
-            val recordInsertsql = "INSERT INTO records(date, orderquantity, total, userid) VALUES(?,?,?,?)"
-            db.execSQL(recordInsertsql, arrayOf(currentDate,quantity,total,userId))
-            clearView()
-
-
-
-        }
-
-        ed_discount.addTextChangedListener(object : TextWatcher{
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
-            }
-
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                calculationTotal()
-            }
-
-            override fun afterTextChanged(p0: Editable?) {
-
-            }
-
-        })
-
-
-
-
-        toggle = ActionBarDrawerToggle(this,drawerLayout,R.string.open,R.string.close)
-        drawerLayout.addDrawerListener(toggle)
-        toggle.syncState()
-
-
-
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-        nav_view.setNavigationItemSelectedListener {
-
-            when(it.itemId){
-                R.id.nav_order -> {
-                    Toast.makeText(applicationContext,"Clicked order",Toast.LENGTH_SHORT).show()
-                    val fragment = supportFragmentManager.beginTransaction()
-                    fragment.replace(R.id.main_fragment,OrderFragment()).commit()
-                }
-                R.id.nav_record -> {
-                    Toast.makeText(applicationContext,"Clicked record",Toast.LENGTH_SHORT).show()
-                    val fragment = supportFragmentManager.beginTransaction()
-                    fragment.replace(R.id.main_fragment,RecordFragment()).commit()
-
-                    val query = db.rawQuery("SELECT * FROM records",null)
-
-                    val recyclerrecord = findViewById<RecyclerView>(R.id.rcv_record)
-
-                    val recordGLM = LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
-
-                    recordAdapter = RecordAdapter(record)
-
-                    recyclerrecord.layoutManager = recordGLM
-
-                    recyclerrecord.adapter = orderAdapter
-
-                    query.moveToFirst()
-                    record.clear()
-                    for(i in 0 until query.count){
-                        record.add(RecordModel(query.getInt(0),query.getString(1),query.getInt(2),query.getInt(3),query.getInt(4)))
-                        query.moveToNext()
-                        recordAdapter.notifyDataSetChanged()
-                    }
-
-                }
-                R.id.nav_logout -> {
-                    Toast.makeText(applicationContext,"Clicked logout",Toast.LENGTH_SHORT).show()
-                    finish()
-                }
-            }
-            true
-        }
-    }
-    fun calculationTotal() {
-        total = 0
-        if(ed_discount.text.toString() !=""){
-            discount = ed_discount.text.toString().toFloat()
-        }
-        if(discount>1.0F){
-            discount = 1.0F
-            ed_discount.setText("1")
-        }
-        for (i in 0 until order.count()){
-            total += (order[i].price * order[i].count)
-        }
-        total = (discount * total).toInt()
-        tv_total.setText(total.toString())
-
-    }
-    fun clearView(){
-        ed_task.setText("")
-        ed_people.setText("")
-        order.clear()
-
-        total = 0
-        calculationTotal()
-        orderAdapter.notifyDataSetChanged()
     }
 
 
@@ -238,6 +266,5 @@ class MainView : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
-
 
 }

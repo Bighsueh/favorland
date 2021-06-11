@@ -4,7 +4,7 @@
               android:layout_height="50dp"
         android:orientation="horizontal">
     <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:textSize="16dp"
@@ -13,7 +13,7 @@
             android:textColor="#000000"
             android:id="@+id/tv_recordid"/>
     <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:textSize="16dp"
@@ -22,7 +22,7 @@
             android:textColor="#000000"
             android:id="@+id/tv_recordtime"/>
     <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:textSize="16dp"
@@ -31,7 +31,7 @@
             android:textColor="#000000"
             android:id="@+id/tv_recordquantity"/>
     <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:textSize="16dp"
@@ -40,7 +40,7 @@
             android:textColor="#000000"
             android:id="@+id/tv_recordtotal"/>
     <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:textSize="16dp"

@@ -53,6 +53,8 @@ class MySQLiteHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,nu
 
 //       task 桌號 total 小記
         db?.execSQL("CREATE TABLE records(id INTEGER PRIMARY KEY AUTOINCREMENT,date TEXT,orderquantity INTEGER,total INTEGER,userid INTEGER)")
+        val recordInsertsql = "INSERT into records(date, orderquantity, total,userid) VALUES(?,?,?,?)"
+        db?.execSQL(recordInsertsql, arrayOf("2021/6/12 03:44",5,500,1))
 
 //      record 再加入時抓records生成的id 也就是這筆結帳records的id對多樣菜品到這裡 ；item 蔡名(看你要用TEXT還是INTEGER) ；quantity 數量
         db?.execSQL("CREATE TABLE recorddetails(id INTEGER PRIMARY KEY AUTOINCREMENT,record INTEGER,item TEXT,quantity INTEGER)")
