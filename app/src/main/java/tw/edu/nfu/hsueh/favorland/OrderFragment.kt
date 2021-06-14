@@ -1,5 +1,6 @@
 package tw.edu.nfu.hsueh.favorland
 
+import android.app.AlertDialog
 import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import android.text.Editable
@@ -57,6 +58,26 @@ class OrderFragment : Fragment() {
         // Inflate the layout for this fragment
         db = MySQLiteHelper(context!!).readableDatabase
 
+
+        val ed_task = view.findViewById<EditText>(R.id.ed_task)
+        ed_task.setOnClickListener {
+//            Toast.makeText(context,"123",Toast.LENGTH_SHORT).show()
+            val list_table = arrayOf("1桌","2桌","3桌","4桌","5桌","6桌")
+            AlertDialog.Builder(context)
+                .setTitle("桌號")
+                .setItems(list_table){dialogInterface,i ->
+                    ed_task.setText(list_table[i])
+                }.show()
+        }
+        val ed_people = view.findViewById<EditText>(R.id.ed_people)
+        ed_people.setOnClickListener {
+            val list_table = arrayOf("1位","2位","3位","4位","5位","6位")
+            AlertDialog.Builder(context)
+                .setTitle("人數")
+                .setItems(list_table){dialogInterface,i ->
+                    ed_people.setText(list_table[i])
+                }.show()
+        }
         val recyclerMenu = view.findViewById<RecyclerView>(R.id.rcv_dishes)
         val menuGridLayoutManager = GridLayoutManager(context!!,4)
         menuListAdapter = MenuListAdapter(menuList)
@@ -98,10 +119,13 @@ class OrderFragment : Fragment() {
             for(i in 0 until order.count()){
                 quantity+=order[i].count
             }
-
-            val recordInsertsql = "INSERT INTO records(date, orderquantity, total, userid) VALUES(?,?,?,?)"
-            db.execSQL(recordInsertsql, arrayOf(currentDate,quantity,total,userId))
-            clearView()
+            if(quantity==0){
+                Toast.makeText(context!!,"請點選菜品",Toast.LENGTH_SHORT).show()
+            }else{
+                val recordInsertsql = "INSERT INTO records(date, orderquantity, total, userid) VALUES(?,?,?,?)"
+                db.execSQL(recordInsertsql, arrayOf(currentDate,quantity,total,userId))
+                clearView()
+            }
         }
         val ed_discount = view.findViewById<EditText>(R.id.ed_discount)
         ed_discount.addTextChangedListener(object : TextWatcher {
@@ -119,6 +143,8 @@ class OrderFragment : Fragment() {
             }
 
         })
+
+
 
 
         return view
@@ -173,8 +199,8 @@ class OrderFragment : Fragment() {
 
     }
     fun clearView(){
-        ed_task.setText("")
-        ed_people.setText("")
+        ed_task.setText("1桌")
+        ed_people.setText("1位")
         order.clear()
 
         total = 0

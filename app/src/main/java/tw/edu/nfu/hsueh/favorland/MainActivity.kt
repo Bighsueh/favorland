@@ -34,5 +34,8 @@ class MainActivity : AppCompatActivity() {
 
             }
         }
+        btn_finish.setOnClickListener {
+            finish()
+        }
     }
 }
